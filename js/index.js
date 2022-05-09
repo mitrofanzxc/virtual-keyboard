@@ -52,16 +52,16 @@ const KEY_CODES_LOWERCASE = [
   ',',
   '.',
   '/',
-  'Up',
+  '',
   'Shift',
   'Ctrl',
   'Win',
   'Alt',
   'Space',
   'Alt',
-  'Left',
-  'Down',
-  'Right',
+  '',
+  '',
+  '',
   'Ctrl',
 ];
 
@@ -119,16 +119,16 @@ const KEY_CODES_UPPERCASE = [
   ',',
   '.',
   '/',
-  'Up',
+  '',
   'Shift',
   'Ctrl',
   'Win',
   'Alt',
   'Space',
   'Alt',
-  'Left',
-  'Down',
-  'Right',
+  '',
+  '',
+  '',
   'Ctrl',
 ];
 
@@ -145,7 +145,7 @@ const createHtml = () => {
   TEXTAREA.classList.add('textarea');
   TEXTAREA.setAttribute('name', 'textarea');
   TEXTAREA.setAttribute('id', 'textarea');
-  TEXTAREA.setAttribute('cols', '30');
+  TEXTAREA.setAttribute('cols', '36');
   TEXTAREA.setAttribute('rows', '5');
 
   // KEYBOARD
@@ -162,6 +162,26 @@ const createHtml = () => {
   for (let i = 0; i < ELEMENTS.length; i++) {
     BODY.append(ELEMENTS[i]);
   }
+
+  const ARROW_UP = document.querySelectorAll('.button')[53];
+  ARROW_UP.classList.add('arrow__up');
+
+  const ARROW_RIGHT = document.querySelectorAll('.button')[62];
+  ARROW_RIGHT.classList.add('arrow__right');
+
+  const ARROW_DOWN = document.querySelectorAll('.button')[61];
+  ARROW_DOWN.classList.add('arrow__down');
+
+  const ARROW_LEFT = document.querySelectorAll('.button')[60];
+  ARROW_LEFT.classList.add('arrow__left');
+
+  const SHIFT_RIGHT = document.querySelectorAll('.button')[54];
+  SHIFT_RIGHT.classList.add('button__shift__right');
+
+  const SPACE = document.querySelectorAll('.button')[58];
+  SPACE.classList.add('button__space');
+
+  KEYBOARD.focus();
 };
 
 createHtml();
@@ -170,7 +190,10 @@ const TEXTAREA = BODY.querySelector('textarea');
 const BUTTONS = BODY.querySelectorAll('.button');
 let handler = false;
 
-const handleCapsLock = () => {
+const handleCapsLock = (event) => {
+  const KEY = event.key;
+  const KEY_PRESS = KEY_CODES_LOWERCASE.indexOf(KEY);
+  BUTTONS[KEY_PRESS].classList.toggle('button__active');
   if (handler === false) {
     handler = true;
     BUTTONS.forEach(
@@ -186,9 +209,9 @@ const handleCapsLock = () => {
 
 const listenKeyDown = (event) => {
   const KEY = event.key;
-  console.log('KEY ===', KEY);
+  const KEY_PRESS = KEY_CODES_LOWERCASE.indexOf(KEY);
   if (KEY === 'CapsLock') {
-    handleCapsLock();
+    handleCapsLock(event);
   } else {
     TEXTAREA.textContent += KEY;
   }
