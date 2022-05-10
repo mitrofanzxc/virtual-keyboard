@@ -1,4 +1,4 @@
-const KEY_CODES_LOWERCASE = [
+const KEY_CODES_EN_LOWERCASE = [
   '`',
   '1',
   '2',
@@ -65,7 +65,74 @@ const KEY_CODES_LOWERCASE = [
   'Ctrl',
 ];
 
-const KEY_CODES_UPPERCASE = [
+const KEY_CODES_RU_LOWERCASE = [
+  '`',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '0',
+  '-',
+  '=',
+  'Backspace',
+  'Tab',
+  'й',
+  'ц',
+  'у',
+  'к',
+  'е',
+  'н',
+  'г',
+  'ш',
+  'щ',
+  'з',
+  'х',
+  'ъ',
+  '\\',
+  'Del',
+  'CapsLock',
+  'ф',
+  'ы',
+  'в',
+  'а',
+  'п',
+  'р',
+  'о',
+  'л',
+  'д',
+  'ж',
+  'э',
+  'Enter',
+  'Shift',
+  'я',
+  'ч',
+  'с',
+  'м',
+  'и',
+  'т',
+  'ь',
+  'б',
+  'ю',
+  '.',
+  '',
+  'Shift',
+  'Ctrl',
+  'Win',
+  'Alt',
+  'Space',
+  'Alt',
+  '',
+  '',
+  '',
+  'Ctrl',
+];
+
+const KEY_CODES_EN_UPPERCASE = [
   '`',
   '1',
   '2',
@@ -132,6 +199,73 @@ const KEY_CODES_UPPERCASE = [
   'Ctrl',
 ];
 
+const KEY_CODES_RU_UPPERCASE = [
+  '`',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '0',
+  '-',
+  '=',
+  'Backspace',
+  'Tab',
+  'Й',
+  'Ц',
+  'У',
+  'К',
+  'Е',
+  'Н',
+  'Г',
+  'Ш',
+  'Щ',
+  'З',
+  'Х',
+  'Ъ',
+  '\\',
+  'Del',
+  'CapsLock',
+  'Ф',
+  'Ы',
+  'В',
+  'А',
+  'П',
+  'Р',
+  'О',
+  'Л',
+  'Д',
+  'Ж',
+  'Э',
+  'Enter',
+  'Shift',
+  'Я',
+  'Ч',
+  'С',
+  'М',
+  'И',
+  'Т',
+  'Ь',
+  'Б',
+  'Ю',
+  '.',
+  '',
+  'Shift',
+  'Ctrl',
+  'Win',
+  'Alt',
+  'Space',
+  'Alt',
+  '',
+  '',
+  '',
+  'Ctrl',
+];
+
 const BODY = document.querySelector('body');
 
 const createHtml = () => {
@@ -151,10 +285,10 @@ const createHtml = () => {
   // KEYBOARD
   const KEYBOARD = document.createElement('div');
   KEYBOARD.classList.add('keyboard');
-  for (let i = 0; i < KEY_CODES_LOWERCASE.length; i++) {
+  for (let i = 0; i < KEY_CODES_EN_LOWERCASE.length; i++) {
     const BUTTON = document.createElement('div');
     BUTTON.classList.add('button');
-    BUTTON.innerText = KEY_CODES_LOWERCASE[i];
+    BUTTON.innerText = KEY_CODES_EN_LOWERCASE[i];
     KEYBOARD.appendChild(BUTTON);
   }
 
@@ -190,18 +324,16 @@ const TEXTAREA = BODY.querySelector('textarea');
 const BUTTONS = BODY.querySelectorAll('.button');
 let handler = false;
 
-const handleCapsLock = (KEY) => {
-  const KEY_PRESS = KEY_CODES_LOWERCASE.indexOf(KEY);
-  BUTTONS[KEY_PRESS].classList.toggle('button__active');
+const handleCapsLock = () => {
   if (handler === false) {
     handler = true;
     BUTTONS.forEach(
-      (button, index) => (button.innerText = KEY_CODES_UPPERCASE[index])
+      (button, index) => (button.innerText = KEY_CODES_EN_UPPERCASE[index])
     );
   } else {
     handler = false;
     BUTTONS.forEach(
-      (button, index) => (button.innerText = KEY_CODES_LOWERCASE[index])
+      (button, index) => (button.innerText = KEY_CODES_EN_LOWERCASE[index])
     );
   }
 };
@@ -209,23 +341,43 @@ const handleCapsLock = (KEY) => {
 const listenKeyDown = (event) => {
   if (event.key) {
     const KEY = event.key;
+    const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(KEY);
+    BUTTONS[KEY_PRESS].classList.add('button__active');
     if (KEY === 'CapsLock') {
-      handleCapsLock(KEY);
+      handleCapsLock();
     } else {
       TEXTAREA.textContent += KEY;
     }
   } else {
     const TARGET = event.target;
+    const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(TARGET.textContent);
+    BUTTONS[KEY_PRESS].classList.add('button__active');
     if (TARGET.textContent === 'CapsLock') {
-      handleCapsLock(TARGET.textContent);
+      handleCapsLock();
     } else {
       TEXTAREA.textContent += TARGET.textContent;
     }
   }
 };
 
+const listenKeyUp = (event) => {
+  if (event.key) {
+    const KEY = event.key;
+    const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(KEY);
+    BUTTONS[KEY_PRESS].classList.remove('button__active');
+  } else {
+    const TARGET = event.target;
+    const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(TARGET.textContent);
+    BUTTONS[KEY_PRESS].classList.remove('button__active');
+  }
+};
+
 document.addEventListener('keydown', listenKeyDown);
+document.addEventListener('keyup', listenKeyUp);
 
 BUTTONS.forEach((button) => {
   button.addEventListener('mousedown', listenKeyDown);
+});
+BUTTONS.forEach((button) => {
+  button.addEventListener('mouseup', listenKeyUp);
 });
