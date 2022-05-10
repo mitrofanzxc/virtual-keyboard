@@ -1,4 +1,4 @@
-const KEY_CODES_EN_LOWERCASE = [
+const KEY_CODES_EN = [
   '`',
   '1',
   '2',
@@ -65,8 +65,8 @@ const KEY_CODES_EN_LOWERCASE = [
   'Ctrl',
 ];
 
-const KEY_CODES_RU_LOWERCASE = [
-  '`',
+const KEY_CODES_RU = [
+  'ё',
   '1',
   '2',
   '3',
@@ -132,140 +132,6 @@ const KEY_CODES_RU_LOWERCASE = [
   'Ctrl',
 ];
 
-const KEY_CODES_EN_UPPERCASE = [
-  '`',
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8',
-  '9',
-  '0',
-  '-',
-  '=',
-  'Backspace',
-  'Tab',
-  'Q',
-  'W',
-  'E',
-  'R',
-  'T',
-  'Y',
-  'U',
-  'I',
-  'O',
-  'P',
-  '[',
-  ']',
-  '\\',
-  'Del',
-  'CapsLock',
-  'A',
-  'S',
-  'D',
-  'F',
-  'G',
-  'H',
-  'J',
-  'K',
-  'L',
-  ';',
-  "'",
-  'Enter',
-  'Shift',
-  'Z',
-  'X',
-  'C',
-  'V',
-  'B',
-  'N',
-  'M',
-  ',',
-  '.',
-  '/',
-  '',
-  'Shift',
-  'Ctrl',
-  'Win',
-  'Alt',
-  'Space',
-  'Alt',
-  '',
-  '',
-  '',
-  'Ctrl',
-];
-
-const KEY_CODES_RU_UPPERCASE = [
-  '`',
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8',
-  '9',
-  '0',
-  '-',
-  '=',
-  'Backspace',
-  'Tab',
-  'Й',
-  'Ц',
-  'У',
-  'К',
-  'Е',
-  'Н',
-  'Г',
-  'Ш',
-  'Щ',
-  'З',
-  'Х',
-  'Ъ',
-  '\\',
-  'Del',
-  'CapsLock',
-  'Ф',
-  'Ы',
-  'В',
-  'А',
-  'П',
-  'Р',
-  'О',
-  'Л',
-  'Д',
-  'Ж',
-  'Э',
-  'Enter',
-  'Shift',
-  'Я',
-  'Ч',
-  'С',
-  'М',
-  'И',
-  'Т',
-  'Ь',
-  'Б',
-  'Ю',
-  '.',
-  '',
-  'Shift',
-  'Ctrl',
-  'Win',
-  'Alt',
-  'Space',
-  'Alt',
-  '',
-  '',
-  '',
-  'Ctrl',
-];
-
 const BODY = document.querySelector('body');
 
 const createHtml = () => {
@@ -285,10 +151,10 @@ const createHtml = () => {
   // KEYBOARD
   const KEYBOARD = document.createElement('div');
   KEYBOARD.classList.add('keyboard');
-  for (let i = 0; i < KEY_CODES_EN_LOWERCASE.length; i++) {
+  for (let i = 0; i < KEY_CODES_EN.length; i++) {
     const BUTTON = document.createElement('div');
     BUTTON.classList.add('button');
-    BUTTON.innerText = KEY_CODES_EN_LOWERCASE[i];
+    BUTTON.innerText = KEY_CODES_EN[i];
     KEYBOARD.appendChild(BUTTON);
   }
 
@@ -310,102 +176,92 @@ const createHtml = () => {
   ARROW_LEFT.classList.add('arrow__left');
 
   const SHIFT_RIGHT = document.querySelectorAll('.button')[54];
-  SHIFT_RIGHT.classList.add('button__shift__right');
+  SHIFT_RIGHT.classList.add('shift__right');
 
   const SPACE = document.querySelectorAll('.button')[58];
-  SPACE.classList.add('button__space');
+  SPACE.innerText = '';
+  SPACE.classList.add('space');
 
-  KEYBOARD.focus();
+  const CAPS_LOCK = document.querySelectorAll('.button')[29];
+  CAPS_LOCK.classList.add('capslock');
 };
 
 createHtml();
 
 const TEXTAREA = BODY.querySelector('textarea');
 const BUTTONS = BODY.querySelectorAll('.button');
-let handler = false;
+const CAPS_LOCK = BODY.querySelector('.capslock');
 
-const handleCapsLock = () => {
-  if (handler === false) {
-    handler = true;
-    BUTTONS.forEach(
-      (button, index) => (button.innerText = KEY_CODES_EN_UPPERCASE[index])
-    );
-  } else {
-    handler = false;
-    BUTTONS.forEach(
-      (button, index) => (button.innerText = KEY_CODES_EN_LOWERCASE[index])
-    );
+let handlerCapsLock = false;
+let handlerKeyboardLayoutEng = true;
+let handlerKeyboardLowercase = true;
+
+const toLowerCase = () => {
+  BUTTONS.forEach((button) => {
+    if (
+      (button.textContent.length <= 1 && button.textContent.match(/[a-z]/gi)) ||
+      button.textContent.match(/[а-яё]/gi)
+    ) {
+      button.innerText = button.innerText.toLowerCase();
+    }
+  });
+};
+
+const toUpperCase = () => {
+  BUTTONS.forEach((button) => {
+    if (
+      (button.textContent.length <= 1 && button.textContent.match(/[a-z]/gi)) ||
+      button.textContent.match(/[а-яё]/gi)
+    ) {
+      button.innerText = button.innerText.toUpperCase();
+    }
+  });
+};
+
+const handleCapsLock = (event) => {
+  const KEY = event.key;
+  if (KEY === 'CapsLock') {
+    if (!handlerCapsLock) {
+      handlerCapsLock = true;
+      toUpperCase();
+      CAPS_LOCK.classList.add('active');
+    } else {
+      handlerCapsLock = false;
+      toLowerCase();
+      CAPS_LOCK.classList.remove('active');
+    }
   }
 };
 
 const listenKeyDown = (event) => {
-  if (handler === false) {
-    if (event.key) {
-      const KEY = event.key;
-      const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(KEY);
-      BUTTONS[KEY_PRESS].classList.add('button__active');
-      if (KEY === 'CapsLock') {
-        handleCapsLock();
-      } else {
-        TEXTAREA.textContent += KEY;
-      }
-    } else {
-      const TARGET = event.target;
-      const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(TARGET.textContent);
-      BUTTONS[KEY_PRESS].classList.add('button__active');
-      if (TARGET.textContent === 'CapsLock') {
-        handleCapsLock();
-      } else {
-        TEXTAREA.textContent += TARGET.textContent;
-      }
-    }
+  console.log('event.key ===', event.key);
+  if (event.key) {
+    const KEY = event.key;
+    const KEY_PRESS = KEY_CODES_EN.indexOf(KEY);
+    BUTTONS[KEY_PRESS].classList.add('active');
+    TEXTAREA.value += KEY;
   } else {
-    if (event.key) {
-      const KEY = event.key;
-      const KEY_PRESS = KEY_CODES_EN_UPPERCASE.indexOf(KEY);
-      BUTTONS[KEY_PRESS].classList.add('button__active');
-      if (KEY === 'CapsLock') {
-        handleCapsLock();
-      } else {
-        TEXTAREA.textContent += KEY;
-      }
-    } else {
-      const TARGET = event.target;
-      const KEY_PRESS = KEY_CODES_EN_UPPERCASE.indexOf(TARGET.textContent);
-      BUTTONS[KEY_PRESS].classList.add('button__active');
-      if (TARGET.textContent === 'CapsLock') {
-        handleCapsLock();
-      } else {
-        TEXTAREA.textContent += TARGET.textContent;
-      }
-    }
+    const TARGET = event.target;
+    const KEY_PRESS = KEY_CODES_EN.indexOf(TARGET.textContent);
+    BUTTONS[KEY_PRESS].classList.add('active');
+    TEXTAREA.value += TARGET.textContent;
   }
 };
 
 const listenKeyUp = (event) => {
-  if (handler === false) {
-    if (event.key) {
-      const KEY = event.key;
-      const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(KEY);
-      BUTTONS[KEY_PRESS].classList.remove('button__active');
-    } else {
-      const TARGET = event.target;
-      const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(TARGET.textContent);
-      BUTTONS[KEY_PRESS].classList.remove('button__active');
-    }
+  console.log('event.key ===', event.key);
+  if (event.key) {
+    const KEY = event.key;
+    const KEY_PRESS = KEY_CODES_EN.indexOf(KEY);
+    BUTTONS[KEY_PRESS].classList.remove('active');
   } else {
-    if (event.key) {
-      const KEY = event.key;
-      const KEY_PRESS = KEY_CODES_EN_UPPERCASE.indexOf(KEY);
-      BUTTONS[KEY_PRESS].classList.remove('button__active');
-    } else {
-      const TARGET = event.target;
-      const KEY_PRESS = KEY_CODES_EN_UPPERCASE.indexOf(TARGET.textContent);
-      BUTTONS[KEY_PRESS].classList.remove('button__active');
-    }
+    const TARGET = event.target;
+    const KEY_PRESS = KEY_CODES_EN.indexOf(TARGET.textContent);
+    BUTTONS[KEY_PRESS].classList.remove('active');
   }
 };
 
+document.addEventListener('keydown', handleCapsLock);
 document.addEventListener('keydown', listenKeyDown);
 document.addEventListener('keyup', listenKeyUp);
 
