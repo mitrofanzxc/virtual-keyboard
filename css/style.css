@@ -224,15 +224,15 @@ a {
   background-image: url("../assets/img/left.svg");
 }
 
-.button__shift__right {
+.shift__right {
   padding: 0.625rem 2.125rem;
 }
 
-.button__space {
+.space {
   width: 15.9375rem;
 }
 
-.button__active {
+.active {
   background-color: #ec7a5c;
   -webkit-transition: 0.3s;
   transition: 0.3s;
