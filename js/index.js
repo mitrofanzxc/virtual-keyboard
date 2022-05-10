@@ -234,30 +234,36 @@ const handleCapsLock = (event) => {
 };
 
 const listenKeyDown = (event) => {
-  console.log('event.key ===', event.key);
   if (event.key) {
     const KEY = event.key;
     const KEY_PRESS = KEY_CODES_EN.indexOf(KEY);
-    BUTTONS[KEY_PRESS].classList.add('active');
-    TEXTAREA.value += KEY;
+    if (KEY_PRESS !== 29) {
+      BUTTONS[KEY_PRESS].classList.add('active');
+      TEXTAREA.value += KEY;
+    }
   } else {
     const TARGET = event.target;
     const KEY_PRESS = KEY_CODES_EN.indexOf(TARGET.textContent);
-    BUTTONS[KEY_PRESS].classList.add('active');
-    TEXTAREA.value += TARGET.textContent;
+    if (KEY_PRESS !== 'CapsLock') {
+      BUTTONS[KEY_PRESS].classList.add('active');
+      TEXTAREA.value += TARGET.textContent;
+    }
   }
 };
 
 const listenKeyUp = (event) => {
-  console.log('event.key ===', event.key);
   if (event.key) {
     const KEY = event.key;
     const KEY_PRESS = KEY_CODES_EN.indexOf(KEY);
-    BUTTONS[KEY_PRESS].classList.remove('active');
+    if (KEY_PRESS !== 29) {
+      BUTTONS[KEY_PRESS].classList.remove('active');
+    }
   } else {
     const TARGET = event.target;
     const KEY_PRESS = KEY_CODES_EN.indexOf(TARGET.textContent);
-    BUTTONS[KEY_PRESS].classList.remove('active');
+    if (KEY_PRESS !== 'CapsLock') {
+      BUTTONS[KEY_PRESS].classList.remove('active');
+    }
   }
 };
 
