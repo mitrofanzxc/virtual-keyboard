@@ -339,36 +339,70 @@ const handleCapsLock = () => {
 };
 
 const listenKeyDown = (event) => {
-  if (event.key) {
-    const KEY = event.key;
-    const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(KEY);
-    BUTTONS[KEY_PRESS].classList.add('button__active');
-    if (KEY === 'CapsLock') {
-      handleCapsLock();
+  if (handler === false) {
+    if (event.key) {
+      const KEY = event.key;
+      const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(KEY);
+      BUTTONS[KEY_PRESS].classList.add('button__active');
+      if (KEY === 'CapsLock') {
+        handleCapsLock();
+      } else {
+        TEXTAREA.textContent += KEY;
+      }
     } else {
-      TEXTAREA.textContent += KEY;
+      const TARGET = event.target;
+      const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(TARGET.textContent);
+      BUTTONS[KEY_PRESS].classList.add('button__active');
+      if (TARGET.textContent === 'CapsLock') {
+        handleCapsLock();
+      } else {
+        TEXTAREA.textContent += TARGET.textContent;
+      }
     }
   } else {
-    const TARGET = event.target;
-    const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(TARGET.textContent);
-    BUTTONS[KEY_PRESS].classList.add('button__active');
-    if (TARGET.textContent === 'CapsLock') {
-      handleCapsLock();
+    if (event.key) {
+      const KEY = event.key;
+      const KEY_PRESS = KEY_CODES_EN_UPPERCASE.indexOf(KEY);
+      BUTTONS[KEY_PRESS].classList.add('button__active');
+      if (KEY === 'CapsLock') {
+        handleCapsLock();
+      } else {
+        TEXTAREA.textContent += KEY;
+      }
     } else {
-      TEXTAREA.textContent += TARGET.textContent;
+      const TARGET = event.target;
+      const KEY_PRESS = KEY_CODES_EN_UPPERCASE.indexOf(TARGET.textContent);
+      BUTTONS[KEY_PRESS].classList.add('button__active');
+      if (TARGET.textContent === 'CapsLock') {
+        handleCapsLock();
+      } else {
+        TEXTAREA.textContent += TARGET.textContent;
+      }
     }
   }
 };
 
 const listenKeyUp = (event) => {
-  if (event.key) {
-    const KEY = event.key;
-    const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(KEY);
-    BUTTONS[KEY_PRESS].classList.remove('button__active');
+  if (handler === false) {
+    if (event.key) {
+      const KEY = event.key;
+      const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(KEY);
+      BUTTONS[KEY_PRESS].classList.remove('button__active');
+    } else {
+      const TARGET = event.target;
+      const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(TARGET.textContent);
+      BUTTONS[KEY_PRESS].classList.remove('button__active');
+    }
   } else {
-    const TARGET = event.target;
-    const KEY_PRESS = KEY_CODES_EN_LOWERCASE.indexOf(TARGET.textContent);
-    BUTTONS[KEY_PRESS].classList.remove('button__active');
+    if (event.key) {
+      const KEY = event.key;
+      const KEY_PRESS = KEY_CODES_EN_UPPERCASE.indexOf(KEY);
+      BUTTONS[KEY_PRESS].classList.remove('button__active');
+    } else {
+      const TARGET = event.target;
+      const KEY_PRESS = KEY_CODES_EN_UPPERCASE.indexOf(TARGET.textContent);
+      BUTTONS[KEY_PRESS].classList.remove('button__active');
+    }
   }
 };
 
