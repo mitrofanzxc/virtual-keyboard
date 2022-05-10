@@ -190,8 +190,7 @@ const TEXTAREA = BODY.querySelector('textarea');
 const BUTTONS = BODY.querySelectorAll('.button');
 let handler = false;
 
-const handleCapsLock = (event) => {
-  const KEY = event.key;
+const handleCapsLock = (KEY) => {
   const KEY_PRESS = KEY_CODES_LOWERCASE.indexOf(KEY);
   BUTTONS[KEY_PRESS].classList.toggle('button__active');
   if (handler === false) {
@@ -208,26 +207,25 @@ const handleCapsLock = (event) => {
 };
 
 const listenKeyDown = (event) => {
-  const KEY = event.key;
-  const KEY_PRESS = KEY_CODES_LOWERCASE.indexOf(KEY);
-  if (KEY === 'CapsLock') {
-    handleCapsLock(event);
+  if (event.key) {
+    const KEY = event.key;
+    if (KEY === 'CapsLock') {
+      handleCapsLock(KEY);
+    } else {
+      TEXTAREA.textContent += KEY;
+    }
   } else {
-    TEXTAREA.textContent += KEY;
-  }
-};
-
-const listenMouseDown = (event) => {
-  const TARGET = event.target;
-  if (TARGET.textContent === 'CapsLock') {
-    handleCapsLock();
-  } else {
-    TEXTAREA.textContent += TARGET.textContent;
+    const TARGET = event.target;
+    if (TARGET.textContent === 'CapsLock') {
+      handleCapsLock(TARGET.textContent);
+    } else {
+      TEXTAREA.textContent += TARGET.textContent;
+    }
   }
 };
 
 document.addEventListener('keydown', listenKeyDown);
 
 BUTTONS.forEach((button) => {
-  button.addEventListener('mousedown', listenMouseDown);
+  button.addEventListener('mousedown', listenKeyDown);
 });
