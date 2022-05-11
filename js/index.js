@@ -191,6 +191,7 @@ createHtml();
 const TEXTAREA = BODY.querySelector('textarea');
 const BUTTONS = BODY.querySelectorAll('.button');
 const CAPS_LOCK = BODY.querySelector('.capslock');
+const SHIFT_RIGHT = BODY.querySelector('.shift__right');
 
 let handlerCapsLock = false;
 let handlerKeyboardLayoutEng = true;
@@ -199,7 +200,8 @@ let handlerKeyboardLowercase = true;
 const toLowerCase = () => {
   BUTTONS.forEach((button) => {
     if (
-      (button.textContent.length <= 1 && button.textContent.match(/[a-z]/gi)) ||
+      (button.textContent.length === 1 &&
+        button.textContent.match(/[a-z]/gi)) ||
       button.textContent.match(/[а-яё]/gi)
     ) {
       button.innerText = button.innerText.toLowerCase();
@@ -210,7 +212,8 @@ const toLowerCase = () => {
 const toUpperCase = () => {
   BUTTONS.forEach((button) => {
     if (
-      (button.textContent.length <= 1 && button.textContent.match(/[a-z]/gi)) ||
+      (button.textContent.length === 1 &&
+        button.textContent.match(/[a-z]/gi)) ||
       button.textContent.match(/[а-яё]/gi)
     ) {
       button.innerText = button.innerText.toUpperCase();
@@ -218,9 +221,27 @@ const toUpperCase = () => {
   });
 };
 
-const handleCapsLock = (event) => {
+const handleKeyDown = (event) => {
   const KEY = event.key;
-  if (KEY === 'CapsLock') {
+  const KEY_PRESS = KEY_CODES_EN.indexOf(KEY);
+  console.log('KEY_PRESS ===', KEY_PRESS);
+
+  if (KEY_PRESS !== 29) {
+    BUTTONS[KEY_PRESS].classList.add('active');
+  }
+
+  if (
+    KEY_PRESS !== 13 &&
+    KEY_PRESS !== 14 &&
+    KEY_PRESS !== 29 &&
+    KEY_PRESS !== 41 &&
+    KEY_PRESS !== 42 &&
+    KEY_PRESS !== 57
+  ) {
+    TEXTAREA.value += KEY;
+  }
+
+  if (event.key === 'CapsLock' || event.target.textContent === 'CapsLock') {
     if (!handlerCapsLock) {
       handlerCapsLock = true;
       toUpperCase();
@@ -230,50 +251,28 @@ const handleCapsLock = (event) => {
       toLowerCase();
       CAPS_LOCK.classList.remove('active');
     }
+  } else if (event.shiftKey) {
+    toUpperCase();
   }
 };
 
-const listenKeyDown = (event) => {
-  if (event.key) {
-    const KEY = event.key;
-    const KEY_PRESS = KEY_CODES_EN.indexOf(KEY);
-    if (KEY_PRESS !== 29) {
-      BUTTONS[KEY_PRESS].classList.add('active');
-      TEXTAREA.value += KEY;
-    }
-  } else {
-    const TARGET = event.target;
-    const KEY_PRESS = KEY_CODES_EN.indexOf(TARGET.textContent);
-    if (KEY_PRESS !== 'CapsLock') {
-      BUTTONS[KEY_PRESS].classList.add('active');
-      TEXTAREA.value += TARGET.textContent;
-    }
+const handleKeyUp = (event) => {
+  const KEY = event.key;
+  const KEY_PRESS = KEY_CODES_EN.indexOf(KEY);
+
+  if (KEY_PRESS !== 29) {
+    BUTTONS[KEY_PRESS].classList.remove('active');
+  }
+
+  if (
+    !event.shiftKey &&
+    event.key !== 'CapsLock' &&
+    event.target.textContent !== 'CapsLock'
+  ) {
+    toLowerCase();
+    SHIFT_RIGHT.classList.remove('active');
   }
 };
 
-const listenKeyUp = (event) => {
-  if (event.key) {
-    const KEY = event.key;
-    const KEY_PRESS = KEY_CODES_EN.indexOf(KEY);
-    if (KEY_PRESS !== 29) {
-      BUTTONS[KEY_PRESS].classList.remove('active');
-    }
-  } else {
-    const TARGET = event.target;
-    const KEY_PRESS = KEY_CODES_EN.indexOf(TARGET.textContent);
-    if (KEY_PRESS !== 'CapsLock') {
-      BUTTONS[KEY_PRESS].classList.remove('active');
-    }
-  }
-};
-
-document.addEventListener('keydown', handleCapsLock);
-document.addEventListener('keydown', listenKeyDown);
-document.addEventListener('keyup', listenKeyUp);
-
-BUTTONS.forEach((button) => {
-  button.addEventListener('mousedown', listenKeyDown);
-});
-BUTTONS.forEach((button) => {
-  button.addEventListener('mouseup', listenKeyUp);
-});
+document.addEventListener('keydown', handleKeyDown);
+document.addEventListener('keyup', handleKeyUp);
